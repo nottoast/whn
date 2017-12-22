@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <link rel="stylesheet" type="text/css" href="css/whn-style.css">
+  </head>
+
+  <body>
+
+    <div id="form-wrapper">
+      <form id="form">
+        <div class="form-group">
+          Select video: <select id="videoSelector"></select>
+        </div>
+        <div class="form-group">
+          ID: <input readonly id="id"></input> <span><a id="test-url" target="_blank">test url</a></span>
+        </div>
+        <div class="form-group">
+          Video ID: <input id="videoId"></input>
+        </div>
+        <div class="form-group">
+          Title: <input id="title"></input>
+        </div>
+        <div class="form-group">
+          Pack: <input id="pack"></input>
+        </div>
+        <div class="form-group">
+          Category: <input id="category"></input>
+        </div>
+        <div class="form-group">
+          Time in seconds to start on: <input id="startTime" type="number"></input>
+        </div>
+        <div class="form-group">
+          Seconds before video paused: <input id="playLength" type="number"></input>
+        </div>
+        <div class="form-group">
+          Seconds after answer given: <input id="answerLength" type="number"></input>
+        </div>
+        <div class="form-group">
+          Questions enabled: <input id="questionsEnabled" type="number"></input>
+        </div>
+        <div class="form-group">
+          Question1: <input id="question1"></input>
+        </div>
+        <div class="form-group">
+          Question2: <input id="question2"></input>
+        </div>
+        <div class="form-group">
+          Question 3: <input id="question3"></input>
+        </div>
+        <div class="form-group">
+          Question 4: <input id="question4"></input>
+        </div>
+        <div class="form-group">
+          Answer: <input id="answer" type="number"></input>
+        </div>
+        <div class="form-group">
+          Enabled: <input id="enabled" type="checkbox"></input>
+        </div>
+        <button id="save-button" type="button">Save</button>
+      </form>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-firestore.js"></script>
+
+    <script>
+      var config = {
+        apiKey: "AIzaSyASiTS2q_cPMS8nd4BUk7Z-R-_aXyGrLDA",
+        authDomain: "what-happens-next-nmwg.firebaseapp.com",
+        databaseURL: "https://what-happens-next-nmwg.firebaseio.com",
+        projectId: "what-happens-next-nmwg",
+        storageBucket: "",
+        messagingSenderId: "197891158508"
+      };
+      firebase.initializeApp(config);
+    </script>
+
+    <script>
+
+      var db = firebase.firestore();
+
+      var videoCollection;
+
+      function loadFormDataAndPopulateSelector() {
+        videoCollection = [];
+        db.collection("base").orderBy("pack").orderBy("category").get().then(function(querySnapshot) {
+          querySnapshot.forEach(function(doc) {
+            var dataToAdd = doc.data();
+            dataToAdd.id = doc.id;
+            videoCollection.push(dataToAdd);
+          });
+        }).then(function(){populateSelector()});
+      }
+
+      function loadFormDataAndPopulateFormData() {
+        videoCollection = [];
+        db.collection("base").orderBy("pack").orderBy("category").get().then(function(querySnapshot) {
+          querySnapshot.forEach(function(doc) {
+            var dataToAdd = doc.data();
+            dataToAdd.id = doc.id;
+            videoCollection.push(dataToAdd);
+          });
+        }).then(function(){populateFormData()});
+      }
+
+      loadFormDataAndPopulateSelector();
+
+      function populateSelector() {
+        var select = document.getElementById("videoSelector");
+        var opt = 'Add new video';
+        var el = document.createElement("option");
+        el.textContent = opt;
+        el.value = opt;
+        select.appendChild(el);
+        for(var i = 0; i < videoCollection.length; i++) {
+            var opt = videoCollection[i].title
+              + ' - (' + videoCollection[i].pack + ')'
+              + ' (' + videoCollection[i].category + ')'
+              + ' (' + videoCollection[i].videoId + ')';
+            var el = document.createElement("option");
+            el.textContent = opt;
+            el.value = opt;
+            select.appendChild(el);
+        }
+        populateFormData();
+      }
+
+      function populateFormData() {
+        var select = document.getElementById("videoSelector");
+        var index = select.selectedIndex - 1;
+        if(index > -1) {
+          setFormField('id', index);
+          setFormField('videoId', index);
+          setFormField('title', index);
+          setFormField('category', index);
+          setFormField('pack', index);
+          setFormField('startTime', index);
+          setFormField('playLength', index);
+          setFormField('answerLength', index);
+          setFormField('questionsEnabled', index);
+          setFormField('question1', index);
+          setFormField('question2', index);
+          setFormField('question3', index);
+          setFormField('question4', index);
+          setFormField('answer', index);
+          if(videoCollection[index]['enabled']) {
+            document.getElementById('enabled').checked = true;
+          }
+          document.getElementById("test-url").href
+            = 'http://what-happens-next-nmwg.firebaseapp.com?id='+document.getElementById('id').value;
+        } else {
+           document.getElementById("form").reset();
+        }
+      }
+
+      function setFormField(id, index) {
+        document.getElementById(id).value = videoCollection[index][''+id]
+      }
+
+      document.getElementById('videoSelector').onchange = function() {
+        populateFormData();
+      };
+
+      document.getElementById('save-button').onclick = function() {
+        var select = document.getElementById("videoSelector");
+        var index = select.selectedIndex - 1;
+        if(index > -1) {
+          update(videoCollection[index].id);
+        } else {
+          add();
+        }
+      };
+
+      function update(id) {
+        db.collection("base").doc(id).update({
+          videoId: document.getElementById("videoId").value,
+          title: document.getElementById("title").value,
+          category: document.getElementById("category").value,
+          pack: document.getElementById("pack").value,
+          startTime: document.getElementById("startTime").value,
+          playLength: document.getElementById("playLength").value,
+          answerLength: document.getElementById("answerLength").value,
+          questionsEnabled: document.getElementById("questionsEnabled").value,
+          question1: document.getElementById("question1").value,
+          question2: document.getElementById("question2").value,
+          question3: document.getElementById("question3").value,
+          question4: document.getElementById("question4").value,
+          answer: document.getElementById("answer").value,
+          enabled: document.getElementById("enabled").checked
+        }).then(function(){loadFormDataAndPopulateFormData()});
+      }
+
+      function add() {
+        db.collection("base").add({
+          videoId: document.getElementById("videoId").value,
+          title: document.getElementById("title").value,
+          category: document.getElementById("category").value,
+          pack: document.getElementById("pack").value,
+          startTime: document.getElementById("startTime").value,
+          playLength: document.getElementById("playLength").value,
+          answerLength: document.getElementById("answerLength").value,
+          questionsEnabled: document.getElementById("questionsEnabled").value,
+          question1: document.getElementById("question1").value,
+          question2: document.getElementById("question2").value,
+          question3: document.getElementById("question3").value,
+          question4: document.getElementById("question4").value,
+          answer: document.getElementById("answer").value,
+          enabled: document.getElementById("enabled").checked
+        }).then(function(){
+          document.getElementById("form").reset();
+          location.reload();
+        });
+      }
+
+    </script>
+  </body>
+</html>

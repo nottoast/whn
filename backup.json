@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+    <style>
+
+    </style>
+  </head>
+
+  <body>
+
+    <div id="output">
+    ({answer:"4", answerLength:"16", category:"Sports", enabled:true, 
+playLength:"21", question1:" Pirlo scores down the left", 
+question2:"Pirlo scores down the right", question3:"Pirlo skies it", 
+question4:"Pirlo chips it smoothly over the goalkeeper", 
+questionsEnabled:"4", startTime:"0", title:"Football Pirlo 1", 
+videoId:"ltHUdQjymfA", id:"51Ogqga0IAU6p4uURJyG"})({answer:"4", 
+answerLength:"16", category:"Sports", enabled:true, playLength:"6", 
+question1:"Luca Toni hits it and it goes in the top right corner", 
+question2:"Luca Toni mishits it and falls over", question3:"Luca Toni 
+dives and gets a yellow card", question4:"Luca Toni hits it and it 
+bounces of the crossbar but doesn't go in", questionsEnabled:"4", 
+startTime:"0", title:"Football Luca Toni 1", videoId:"GSBAQdbFNzE", 
+id:"7NjRs6yhf2nbIygCACsx"})({answer:"3", answerLength:"16", 
+category:"Sports", enabled:true, playLength:"6", question1:"Essien hits 
+it and it hits the bar", question2:"Essien gets fouled", 
+question3:"Essien scores and it goes in the top left corner", 
+question4:"Essien scores and it goes in the top right corner", 
+questionsEnabled:"4", startTime:"0", title:"Football Essien 1", 
+videoId:"4oKMDWXrTao", id:"Jps6wAtQlhWZIwNZstHI"})({answer:"3", 
+answerLength:"16", category:"Sports", enabled:true, playLength:"1", 
+question1:"Gilardino taps it in effortlessly", question2:"Gilardino hits
+ the post", question3:"GIlardino does a terrible dive", question4:"The 
+goalkeeper badly tackles Gilardino", questionsEnabled:"4", 
+startTime:"0", title:"Football Gilardino 1", videoId:"XAeWvwDJxBM", 
+id:"QBSgANzatI9H6HjH8Ok3"})({answer:"3", answerLength:"16", 
+category:"Sports", enabled:true, playLength:"3", question1:"Kaka shoots 
+and it goes in the top right corner", question2:"Kaka shoots and it goes
+ in the bottom left corner", question3:"Kaka heads it between the 
+players then scores with his feet", question4:"Kaka backheels it away 
+from the players and scores", questionsEnabled:"4", startTime:"0", 
+title:"Football Kaka 1", videoId:"OTjsvvB3_xY", 
+id:"UhwtnDXrWnpWf7OySGSu"})({answer:"3", answerLength:"16", category:"TV
+ Show", enabled:false, playLength:"30", question1:"The lights don\u2019t
+ work", question2:"The lights are too bright ", question3:"The light is 
+attached to a bicycle wheel", question4:"The light is attached to a 
+helmet", questionsEnabled:"4", startTime:"0", title:"Alan Partridge 
+scene 1", videoId:"isHZcy0RKEE ", 
+id:"X6sKFM33huneqCVDtuqp"})({answer:"2", answerLength:"16", category:"TV
+ Show", enabled:true, playLength:"49", question1:"He who dares wins", 
+question2:"I didn\u2019t know you were good at maths either Boyce", 
+question3:"Lovely Jubbly Boyce", question4:"You know it makes sense 
+Boyce", questionsEnabled:"4", startTime:"73", title:"Only Fools and 
+Horses scene 1", videoId:"C_fHScmyWTA", 
+id:"XPzQEUKzCf7fiOlw6P5o"})({answer:"3", answerLength:"16", 
+category:"Sports", enabled:true, playLength:"7", question1:"Zlatan 
+elbows the Lecce player", question2:"Zlatan does a bicycle kick but 
+misses", question3:"Zlatan shoots from there and scores", 
+question4:"Zlatan shoots from there and hits the bar", 
+questionsEnabled:"4", startTime:"0", title:"Football Zlatan 1", 
+videoId:"avfgmV8Z0r8", id:"bU0EpeSYzqW6eInVzr14"})({answer:"2", 
+answerLength:"16", category:"Sports", enabled:true, playLength:"6", 
+question1:"The player falls over", question2:"The player is yellow 
+carded", question3:"The player scores a goal", question4:"The player 
+does a nutmeg", questionsEnabled:"4", startTime:"5", title:"Football 
+Misc 1", videoId:"to2hVwLRESY", id:"czrNCSLyGwzl00DJk36M"})({answer:"2",
+ answerLength:"16", category:"TV Shows", enabled:true, playLength:"22", 
+question1:"Swears at him", question2:"Puts his hands in his mash", 
+question3:"Just looks at him blankly", question4:"Throws the food in the
+ bin", questionsEnabled:"4", startTime:"0", title:"Extras scene 1", 
+videoId:"3-x0xFfhFms", id:"gpZOPF02W7x4V7JPbT7K"})({answer:"2", 
+answerLength:"16", category:"TV Show", enabled:true, playLength:"90", 
+question1:"Karl Jumps and screams like a girl", question2:"Karl 
+doesn\u2019t jump and admits he has bottled it", question3:"Karl 
+doesn\u2019t jump and claims it isn\u2019t safe", question4:"Karl jumps 
+and really enjoys it", questionsEnabled:"4", startTime:"0", title:"Idiot
+ Abroad scene 1", videoId:"TF3efVFjXlk", 
+id:"tS0OoC7MI3menTd1Ap6Q"})({answer:"1", answerLength:"16", 
+category:"Video Games", enabled:true, playLength:"5", question1:"Link 
+runs into an annoying owl", question2:"Link runs into an enemy", 
+question3:"Link runs into an eagle", question4:"Link gets reminded by 
+Navi", questionsEnabled:"4", startTime:"0", title:"Video game Zelda 1", 
+videoId:"Fc3pFGJDYOM", id:"uEYb7fb63Afmfo9ftNJV"})({answer:"3", 
+answerLength:"16", category:"Movie", enabled:true, playLength:"30", 
+question1:"Pikachu cries on his own", question2:"All the pokemon cry but
+ nothing happens", question3:"All the pokemon cry and the tears revive 
+Ash", question4:"All the pokemon become angry and attack Mewtwo", 
+questionsEnabled:"4", startTime:"0", title:"Pokemon 1", 
+videoId:"3CTKzFLcjXA", id:"xgn0BhpEL5Cm9ibzNPHS"})</div>
+
+    <script src="backup_files/firebase.js"></script>
+    <script src="backup_files/firebase-firestore.js"></script>
+
+    <script>
+      var config = {
+        apiKey: "AIzaSyASiTS2q_cPMS8nd4BUk7Z-R-_aXyGrLDA",
+        authDomain: "what-happens-next-nmwg.firebaseapp.com",
+        databaseURL: "https://what-happens-next-nmwg.firebaseio.com",
+        projectId: "what-happens-next-nmwg",
+        storageBucket: "",
+        messagingSenderId: "197891158508"
+      };
+      firebase.initializeApp(config);
+    </script>
+
+    <script>
+
+      var db = firebase.firestore();
+
+      function loadData() {
+        db.collection("base").get().then(function(querySnapshot) {
+          querySnapshot.forEach(function(doc) {
+            var dataToAdd = doc.data();
+            dataToAdd.id = doc.id;
+            document.getElementById('output').innerHTML += dataToAdd.toSource();
+          });
+        });
+      }
+
+      loadData();
+
+    </script>
+  
+
+</body></html>

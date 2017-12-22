@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <link rel="stylesheet" type="text/css" href="css/whn-style.css">
+  </head>
+
+  <body>
+
+    <div id="output">
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-firestore.js"></script>
+
+    <script>
+      var config = {
+        apiKey: "AIzaSyASiTS2q_cPMS8nd4BUk7Z-R-_aXyGrLDA",
+        authDomain: "what-happens-next-nmwg.firebaseapp.com",
+        databaseURL: "https://what-happens-next-nmwg.firebaseio.com",
+        projectId: "what-happens-next-nmwg",
+        storageBucket: "",
+        messagingSenderId: "197891158508"
+      };
+      firebase.initializeApp(config);
+    </script>
+
+    <script>
+
+      var db = firebase.firestore();
+
+      /*
+      function loadData() {
+        db.collection("base").get().then(function(querySnapshot) {
+          querySnapshot.forEach(function(doc) {
+            var dataToAdd = doc.data();
+            dataToAdd.id = doc.id;
+            document.getElementById('output').innerHTML += dataToAdd.toSource();
+          });
+        });
+      }*/
+
+      function loadData() {
+        db.collection("base").get().then(function(querySnapshot) {
+
+          var first = true;
+
+          querySnapshot.forEach(function(doc) {
+            var dataToAdd = doc.data();
+            dataToAdd.id = doc.id;
+
+            if(first) {
+              first = false;
+              for (var key in dataToAdd) {
+                document.getElementById('output').innerHTML += key+"|^";
+              }
+              document.getElementById('output').innerHTML += dataToAdd[key]+"<br/>";
+            }
+
+            for (var key in dataToAdd) {
+              document.getElementById('output').innerHTML += dataToAdd[key]+"|^";
+            }
+            document.getElementById('output').innerHTML += dataToAdd[key]+"<br/>";
+
+          });
+        });
+      }
+
+      loadData();
+
+    </script>
+  </body>
+</html>
