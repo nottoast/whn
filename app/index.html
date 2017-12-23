@@ -327,8 +327,11 @@
             document.getElementById('ans'+answer).style.backgroundColor = '#ff8181';
             document.getElementById('ans'+videoToDisplay.answer).style.backgroundColor = '#c2fbc2';
           }
+
           document.getElementById('timer').innerHTML = 'The next video will start in X seconds';
+
           playVideo();
+
           skipTimeout = setTimeout(nextVideo, videoToDisplay.answerLength * 1000);
 
           if(loggedInUser) {
