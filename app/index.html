@@ -1,528 +1,108 @@
 <!DOCTYPE html>
 <html>
-
   <head>
     <link href="https://fonts.googleapis.com/css?family=Walter+Turncoat" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="css/whn-style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   </head>
-
   <body>
-
     <div id="whn-wrapper">
 
-      <div id="whn-title">
+      <div id="whn-title" class="text">
         <span class="title-text">What happens next?</span>
       </div>
 
       <div class="spacer-1"></div>
 
-      <div id="player-controls-wrapper">
-        <div id="player-wrapper" class="wrapper">
-          <div id="player"></div>
-        </div>
-        <div id="controls-wrapper" class="wrapper">
-          <div id="controls">
-            <div id="user-name" class="user-name-display"></div>
-            <div id="fb-sign-in" class="fb-button" style="display: none">Sign in</div>
-            <div id="fb-sign-out" class="fb-button" style="display: none">X</div>
-            <br/><br/>
-            Overall leaderboard
-            <div id="leaderboard"></div>
-          </div>
-        </div>
+      <div id="site-intro" class="text">
+        <span class="info-text">Welcome to What Happens Next! Please select a pack or category to begin, or click <a href="quiz.html">here</a> to quiz yourself on every video.</span>
       </div>
 
-      <div class="spacer-0-8"></div>
+      <div class="spacer-1"></div>
 
-      <div id="quiz-timer-wrapper">
-        <div id="quiz-section-wrapper">
-          <div id="quiz-section">
-            <table id="quiz-table">
-              <tr class="top-row">
-                <td id="ans1" class="question"></td>
-                <td id="ans2" class="question"></td>
-              </tr>
-              <tr class="bottom-row">
-                <td id="ans3" class="question"></td>
-                <td id="ans4" class="question"></td>
-              </tr>
-            </table>
-          </div>
-        </div>
-        <div id="timer-section" class="wrapper">
-          <div id="timer-wrapper">
-            <div id="timer">
-              <span>Loading...</span>
-            </div>
-            <div id="skip">skip</div>
-          </div>
-        </div>
+      <div id="packs-subtitle" class="text">
+        <span class="subtitle-text">Packs</span>
+      </div>
+
+      <div class="spacer-1"></div>
+
+      <div id="pack-container" class="index-container">
+        <div class="index-background"></div>
+      </div>
+
+      <div class="spacer-1"></div>
+
+      <div id="categories-subtitle" class="text">
+        <span class="subtitle-text">Categories</span>
+      </div>
+
+      <div class="spacer-1"></div>
+
+      <div id="category-container" class="index-container">
+        <div class="index-background"></div>
       </div>
 
     </div>
-
-    <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-firestore.js"></script>
-
-    <script>
-      var config = {
-        apiKey: "AIzaSyASiTS2q_cPMS8nd4BUk7Z-R-_aXyGrLDA",
-        authDomain: "what-happens-next-nmwg.firebaseapp.com",
-        databaseURL: "https://what-happens-next-nmwg.firebaseio.com",
-        projectId: "what-happens-next-nmwg",
-        storageBucket: "",
-        messagingSenderId: "197891158508"
-      };
-      firebase.initializeApp(config);
-    </script>
-
     <script>
 
-      var provider = new firebase.auth.FacebookAuthProvider();
-      var loggedInUser, token;
-      var db = firebase.firestore();
-      var viewCount = -1;
-      var currentScore = -1;
-      var totalScore = 0;
-      var packScore = 0;
-      var videoToDisplay;
-      var tag;
-      var firstScriptTag;
-      var player;
-      var pauseCountdown;
-      var pauseTimeout, skipTimeout;
-      var answerGiven = false;
-      var videoPaused = false;
-      var userCreated = false;
-      var createUserScores = false;
-      var videoCollection = [];
-      var seenVideos = [];
-      var users;
-
-      firebase.auth().onAuthStateChanged(function(user) {
-        if (user) {
-          loggedInUser = user;
-          document.getElementById("user-name").style.display = 'inline-block';
-          document.getElementById("user-name").innerHTML = user.displayName;
-          document.getElementById("fb-sign-in").style.display = 'none';
-          document.getElementById("fb-sign-out").style.display = 'inline-block';
-          refreshLeaderboard();
-          loadUserData();
-        } else {
-          document.getElementById("fb-sign-out").style.display = 'none';
-          document.getElementById("user-name").innerHTML = '';
-          document.getElementById("fb-sign-in").style.display = 'inline-block';
-          loadQuizData();
-        }
-      });
-
-      function loadUserData() {
-        seenVideos = [];
-        db.collection("videostats").where("uid", "==", loggedInUser.uid).get().then(function(querySnapshot) {
-          querySnapshot.forEach(function(doc) {
-            var dataToAdd = doc.data();
-            dataToAdd.id = doc.id;
-            seenVideos.push(dataToAdd);
-          });
-        }).then(function(){loadQuizData()});
-      }
-
-      function loadQuizData() {
-        videoCollection = [];
-        db.collection("base").where("enabled", "==", true).get().then(function(querySnapshot) {
-          querySnapshot.forEach(function(doc) {
-            var dataToAdd = doc.data();
-            dataToAdd.id = doc.id;
-            videoCollection.push(dataToAdd);
-          });
-        }).then(function(){loadQuizToDisplay()});
-      }
-
-      function loadQuizToDisplay() {
-
-        var paramId = getParameterFromURL('id', window.location.href);
-        var randomIndex = -1;
-
-        if(paramId === null) {
-        if(seenVideos.length == 0) {
-          randomIndex = pickRandomVideo();
-        } else {
-          var videoFound = false;
-          for(i = 0; i < videoCollection.length; i++) {
-            var videoAlreadySeen = false;
-            for(j = 0; j < seenVideos.length; j++) {
-              if(videoCollection[i].videoId == seenVideos[j].videoId) {
-                  videoAlreadySeen = true;
-                  break;
-              }
-            }
-            if(!videoAlreadySeen) {
-              videoToDisplay = videoCollection[i];
-              videoFound = true;
-              seenVideos.push(videoToDisplay);
-            }
-          }
-          if(!videoFound) {
-            randomIndex = pickRandomVideo();
-          }
-        }
-        } else {
-          for (var i = 0, len = videoCollection.length; i < len; i++) {
-              if(videoCollection[i].id === paramId) {
-                videoToDisplay = videoCollection[i];
-                break;
-              }
-          }
-        }
-
-        removeFromArray(videoCollection, randomIndex);
-
-        tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-        pauseCountdown = setInterval(function() {
-          var startTime = parseInt(videoToDisplay.startTime);
-          var playLength = parseInt(videoToDisplay.playLength);
-          var timeToDisplay = playLength - startTime - 1;
-          timeToDisplay = timeToDisplay - parseInt(player.getCurrentTime(), 10);
-          document.getElementById('timer').innerHTML = 'The video will pause in ' + timeToDisplay + ' seconds';
-        }, 1000);
-      }
-
-      function pickRandomVideo() {
-        var randomIndex = Math.floor(Math.random() * videoCollection.length);
-        videoToDisplay = videoCollection[randomIndex];
-        return randomIndex;
-      }
-
-      function refreshLeaderboard() {
-        if(loggedInUser) {
-          db.collection("userscores").orderBy("all", "desc").onSnapshot(function(querySnapshot) {
-            document.getElementById("leaderboard").innerHTML = "";
-            querySnapshot.forEach(function(doc) {
-                db.collection("users").doc(doc.id).get().then(function(doc2){
-                  // pass the score type as a parameter
-                  document.getElementById("leaderboard").innerHTML
-                    = document.getElementById("leaderboard").innerHTML
-                    + doc2.data().displayName + "  " + doc.data().all + "<br/>";
-                });
-            });
-          });
-        } else {
-          document.getElementById("leaderboard").innerHTML = "";
-        }
-      }
-
-      function onYouTubeIframeAPIReady() {
-        player = new YT.Player('player', {
-          height: '390',
-          width: '640',
-          videoId: videoToDisplay.videoId,
-          playerVars: {
-            start: videoToDisplay.startTime,
-            rel: 0,
-            controls: 0,
-            fs: 0,
-            showinfo: 0,
-            iv_load_policy: 3
-          },
-          events: {
-            'onReady': onPlayerReady,
-            'onStateChange': onPlayerStateChange
-          }
-        });
-      }
-
-      function onPlayerReady(event) {
-        event.target.playVideo();
-      }
-
-      function onPlayerStateChange(event) {
-        if (event.data == YT.PlayerState.PLAYING && !videoPaused) {
-          pauseTimeout = setTimeout(prepareAnswers, getPlayLength() * 1000);
-          videoPaused = true;
-        }
-        if(event.data == YT.PlayerState.STOPPED) {
-          nextVideo();
-        }
-      }
-
-      function stopVideo() {
-        player.stopVideo();
-      }
-      function pauseVideo() {
-        player.pauseVideo();
-      }
-      function playVideo() {
-        player.playVideo();
-      }
-
-      document.getElementById('skip').onclick = function() {
-        stopVideo();
-        nextVideo();
-      };
-      document.getElementById('fb-sign-in').onclick = function() {
-        fbSignIn();
-      };
-      document.getElementById('fb-sign-out').onclick = function() {
-        fbSignOut();
-      };
-
-      function prepareAnswers() {
-
-        clearInterval(pauseCountdown);
-
-        pauseVideo();
-
-        document.getElementById('timer').innerHTML = 'You have X seconds remaining to answer';
-
-        var ans1 = document.getElementById("ans1");
-        var ans2 = document.getElementById("ans2");
-        var ans3 = document.getElementById("ans3");
-        var ans4 = document.getElementById("ans4");
-
-        ans1.style.backgroundColor = '#ffffff';
-        ans2.style.backgroundColor = '#ffffff';
-        ans3.style.backgroundColor = '#ffffff';
-        ans4.style.backgroundColor = '#ffffff';
-
-        ans1.className += " question-box-shadow question-hover";
-        ans2.className += " question-box-shadow question-hover";
-        ans3.className += " question-box-shadow question-hover";
-        ans4.className += " question-box-shadow question-hover";
-
-        ans1.innerHTML = videoToDisplay.question1;
-        ans2.innerHTML = videoToDisplay.question2;
-        ans3.innerHTML = videoToDisplay.question3;
-        ans4.innerHTML = videoToDisplay.question4;
-
-        ans1.onclick = function() {
-          processAnswer(1);
-        };
-        ans2.onclick = function() {
-          processAnswer(2);
-        };
-        ans3.onclick = function() {
-          processAnswer(3);
-        };
-        ans4.onclick = function() {
-          processAnswer(4);
-        };
-
-      }
-
-      function processAnswer(answer) {
-
-        if(!answerGiven) {
-
-          answerGiven = true;
-
-          if(answer == videoToDisplay.answer) {
-            currentScore = 10;
-            document.getElementById('ans'+answer).style.backgroundColor = '#c2fbc2';
+      function addPacks() {
+        for(var i =1; i<= 8; i++){
+          if(i<= 7) {
+            $('#pack-container').append(
+            '<a href="quiz.html">'
+            + '<div class="index-block wrapper">'
+            + '<div class="index-name">'
+            + '<span>Football Skills</span>'
+            + '</div>'
+            + '<img class="index-image" src="https://www2.deloitte.com/content/dam/Deloitte/uk/Images/promo_images/Campaign/sport/uk-deloitte-sbg-football-us-fans-promo.jpg"></img>'
+            + '</div>'
+            + '</a>'
+            )
           } else {
-            currentScore = 0;
-            document.getElementById('ans'+answer).style.backgroundColor = '#ff8181';
-            document.getElementById('ans'+videoToDisplay.answer).style.backgroundColor = '#c2fbc2';
-          }
-
-          document.getElementById('timer').innerHTML = 'The next video will start in X seconds';
-
-          playVideo();
-
-          skipTimeout = setTimeout(nextVideo, videoToDisplay.answerLength * 1000);
-
-          if(loggedInUser) {
-            var videostatsKey = loggedInUser.uid+"."+videoToDisplay.videoId;
-            db.collection("videostats")
-              .doc(videostatsKey).get()
-              .then(function(doc) {
-                if(doc.exists) {
-                  viewCount = doc.data().viewCount;
-                }
-              }).then(function(){
-                db.collection("userscores")
-                  .doc(loggedInUser.uid).get()
-                  .then(function(doc) {
-                    if(doc.exists) {
-                      totalScore = doc.data().all;
-                      packScore = doc.data()[videoToDisplay.pack];
-                    } else {
-                      createUserScores = true;
-                    }
-                  }).then(function(){incrementCounters()});
-              });
-          }
-
-        }
-
-      }
-
-      function removeFromArray(array, index) {
-        array.splice(index, 1);
-      }
-
-      function getPlayLength() {
-        return videoToDisplay.playLength;
-      }
-
-      function nextVideo() {
-
-        clearTimeout(pauseTimeout);
-        clearTimeout(skipTimeout);
-
-        //player.stopVideo();
-        videoPaused = false;
-
-        document.getElementById('timer').innerHTML = 'Loading...';
-
-        var ans1 = document.getElementById("ans1");
-        var ans2 = document.getElementById("ans2");
-        var ans3 = document.getElementById("ans3");
-        var ans4 = document.getElementById("ans4");
-
-        ans1.style.backgroundColor = '#ed8b39';
-        ans2.style.backgroundColor = '#ed8b39';
-        ans3.style.backgroundColor = '#ed8b39';
-        ans4.style.backgroundColor = '#ed8b39';
-
-        ans1.className = "question";
-        ans2.className = "question";
-        ans3.className = "question";
-        ans4.className = "question";
-
-        ans1.innerHTML = "";
-        ans2.innerHTML = "";
-        ans3.innerHTML = "";
-        ans4.innerHTML = "";
-
-        var newAns1 = ans1.cloneNode(true);
-        ans1.parentNode.replaceChild(newAns1, ans1);
-        var newAns2 = ans2.cloneNode(true);
-        ans2.parentNode.replaceChild(newAns2, ans2);
-        var newAns3 = ans3.cloneNode(true);
-        ans3.parentNode.replaceChild(newAns3, ans3);
-        var newAns4 = ans4.cloneNode(true);
-        ans4.parentNode.replaceChild(newAns4, ans4);
-
-        answerGiven = false;
-        currentScore = 0;
-
-        if(videoCollection.length == 0) {
-          videoCollection = [];
-          db.collection("base").where("enabled", "==", true).get().then(function(querySnapshot) {
-            querySnapshot.forEach(function(doc) {
-              var dataToAdd = doc.data();
-              dataToAdd.id = doc.id;
-              videoCollection.push(dataToAdd);
-            });
-          }).then(function(){
-            loadQuizToDisplay()
-            player.loadVideoById({videoId:videoToDisplay.videoId,
-                                  startSeconds:videoToDisplay.startTime});
-          });
-        } else {
-          loadQuizToDisplay()
-          player.loadVideoById({videoId:videoToDisplay.videoId,
-                                startSeconds:videoToDisplay.startTime});
-        }
-
-      }
-
-      function getParameterFromURL(name, url) {
-        if (!url) url = location.href;
-        name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
-        var regexS = "[\\?&]"+name+"=([^&#]*)";
-        var regex = new RegExp( regexS );
-        var results = regex.exec( url );
-        return results == null ? null : results[1];
-      }
-
-      function fbSignIn() {
-        firebase.auth().signInWithPopup(provider).then(function(result) {
-          token = result.credential.accessToken;
-          user = result.user;
-          db.collection("users").where("uid", "==", user.uid).get().then(function(querySnapshot) {
-            querySnapshot.forEach(function(doc) {
-              userCreated = true;
-            });
-          }).then(function(){createNewUser()});
-        }).catch(function(error) {
-          var errorCode = error.code;
-          var errorMessage = error.message;
-          var email = error.email;
-          var credential = error.credential;
-        });
-      }
-
-      function fbSignOut() {
-        firebase.auth().signOut().then(function() {
-          loggedInUser = null;
-        }).catch(function(error) {
-        });
-      }
-
-      function createNewUser() {
-        if(!userCreated) {
-          db.collection("users").doc(user.uid).set({
-            uid: user.uid,
-            email: user.email,
-            displayName: user.displayName,
-            photoURL: user.photoURL,
-            isAdmin: false
-          });
-        }
-      }
-
-      function incrementCounters() {
-        if(viewCount >= 0) {
-          viewCount = viewCount + 1;
-          db.collection("videostats").doc(loggedInUser.uid+"."+videoToDisplay.videoId).update({
-            viewCount: viewCount,
-            pack: videoToDisplay.pack,
-            category: videoToDisplay.category
-          });
-        } else {
-          db.collection("videostats").doc(loggedInUser.uid+"."+videoToDisplay.videoId).set({
-            uid: loggedInUser.uid,
-            videoId: videoToDisplay.videoId,
-            pack: videoToDisplay.pack,
-            category: videoToDisplay.category,
-            viewCount: 1,
-            score: currentScore
-          });
-        }
-        if(createUserScores) {
-          createUserScores = false;
-          if(videoToDisplay.pack != "" && totalScore > -1 && currentScore > -1 && packScore > -1) {
-            var pack = videoToDisplay.pack;
-            db.collection("userscores").doc(loggedInUser.uid).set({
-              all: totalScore + currentScore,
-              [pack]: packScore + currentScore
-            });
-          } else if (totalScore > -1 && currentScore > -1) {
-            db.collection("userscores").doc(loggedInUser.uid).set({
-              all: totalScore + currentScore
-            });
-          }
-        } else {
-          if(videoToDisplay.pack != "" && totalScore > -1 && currentScore > -1 && packScore > -1) {
-            var pack = videoToDisplay.pack;
-            db.collection("userscores").doc(loggedInUser.uid).update({
-              all: totalScore + currentScore,
-              [pack]: packScore + currentScore
-            });
-          } else if (totalScore > -1 && currentScore > -1) {
-            var userScores = {};
-            userScores['all'] = totalScore + currentScore;
-            db.collection("userscores").doc(loggedInUser.uid).update({
-              all: totalScore + currentScore
-            });
+            $('#pack-container').append(
+            '<a href="quiz.html">'
+            + '<div class="index-block wrapper" style="margin-right: 80px">'
+            + '<div class="index-name">'
+            + '<span>Football Skills</span>'
+            + '</div>'
+            + '<img class="index-image" src="https://www2.deloitte.com/content/dam/Deloitte/uk/Images/promo_images/Campaign/sport/uk-deloitte-sbg-football-us-fans-promo.jpg"></img>'
+            + '</div>'
+            + '</a>'
+            )
           }
         }
       }
+
+      function addCategories() {
+        for(var i =1; i<= 8; i++){
+          if(i<= 7) {
+            $('#category-container').append(
+            '<a href="quiz.html">'
+            + '<div class="index-block wrapper">'
+            + '<div class="index-name">'
+            + '<span>Video Games</span>'
+            + '</div>'
+            + '<img class="index-image" src="https://pisces.bbystatic.com/BestBuy_US/store/ee/2017/vg/pol/evn-Cat-acc-0312.jpg"></img>'
+            + '</div>'
+            + '</a>'
+            )
+          } else {
+            $('#category-container').append(
+            '<a href="quiz.html">'
+            + '<div class="index-block wrapper" style="margin-right: 80px">'
+            + '<div class="index-name">'
+            + '<span>Video Games</span>'
+            + '</div>'
+            + '<img class="index-image" src="https://pisces.bbystatic.com/BestBuy_US/store/ee/2017/vg/pol/evn-Cat-acc-0312.jpg"></img>'
+            + '</div>'
+            + '</a>'
+            )
+          }
+        }
+      }
+
+      addPacks();
+      addCategories();
 
     </script>
   </body>
