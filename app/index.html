@@ -8,17 +8,35 @@
   <body>
     <div id="whn-wrapper">
 
-      <div id="whn-title" class="text">
-        <span class="title-text">What happens next?</span>
+      <div id="index-title" class="text">
+        <div class="index-title-text title-text">What happens next?</div>
+        <div class="menu info-text">
+          <span id="menu-signin" style="display: none" onclick="document.getElementById('login-popup').style.display = 'inline-block'">Sign in</span>
+          <span id="menu-leaderboard" style="display: none"> / Leaderboard</span>
+          <span id="menu-admin" style="display: none"> / Admin</span>
+        </div>
       </div>
 
       <div class="spacer-1"></div>
 
       <div id="site-intro" class="text">
-        <span class="info-text">Welcome to What Happens Next! Please select a pack or category to begin, or click <a href="quiz.html">here</a> to quiz yourself on every video.</span>
+        <span class="info-text">Welcome to What Happens Next! Please select a pack or category to begin, or click <a href="quiz.html">here</a> to quiz yourself on every video</span>
+        <br/>
+        <span class="info-text">To save your scores and appear on the leaderboard please sign in</span>
       </div>
 
       <div class="spacer-1"></div>
+
+      <div id="login-popup" style="display: none">
+        <div class="menu info-text">
+          <span id="login-popup-close" onclick="document.getElementById('login-popup').style.display = 'none'">X</span>
+        </div>
+        <div id="fb-sign-in-info" class="fb-sign-in-info">Please click on the following button to sign in using Facebook</div>
+        <div id="fb-sign-out-info" class="fb-sign-in-info" style="display: none">Please click on the following button to sign out</div>
+        <br/>
+        <div id="fb-sign-in" class="fb-sign-in-info cursor-pointer">Sign in</div>
+        <div id="fb-sign-out" class="fb-sign-in-info cursor-pointer" style="display: none">Sign out</div>
+      </div>
 
       <div id="packs-subtitle" class="text">
         <span class="subtitle-text">Packs</span>
@@ -43,7 +61,25 @@
       </div>
 
     </div>
+
+    <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-firestore.js"></script>
+
     <script>
+      var config = {
+        apiKey: "AIzaSyASiTS2q_cPMS8nd4BUk7Z-R-_aXyGrLDA",
+        authDomain: "what-happens-next-nmwg.firebaseapp.com",
+        databaseURL: "https://what-happens-next-nmwg.firebaseio.com",
+        projectId: "what-happens-next-nmwg",
+        storageBucket: "",
+        messagingSenderId: "197891158508"
+      };
+      firebase.initializeApp(config);
+    </script>
+
+    <script>
+
+      var provider = new firebase.auth.FacebookAuthProvider();
 
       function addPacks() {
         for(var i =1; i<= 8; i++){
@@ -103,6 +139,70 @@
 
       addPacks();
       addCategories();
+
+      firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+          document.getElementById("menu-signin").style.display = 'inline-block';
+          document.getElementById("menu-signin").innerHTML = user.displayName;
+          document.getElementById("fb-sign-in-info").style.display = 'none';
+          document.getElementById("fb-sign-out-info").style.display = 'inline-block';
+          document.getElementById("fb-sign-in").style.display = 'none';
+          document.getElementById("fb-sign-out").style.display = 'inline-block';
+        } else {
+          document.getElementById("menu-signin").style.display = 'inline-block';
+          document.getElementById("menu-signin").innerHTML = 'Sign in';
+          document.getElementById("fb-sign-in-info").style.display = 'inline-block';
+          document.getElementById("fb-sign-out-info").style.display = 'none';
+          document.getElementById("fb-sign-in").style.display = 'inline-block';
+          document.getElementById("fb-sign-out").style.display = 'none';
+        }
+      });
+
+      document.getElementById('fb-sign-in').onclick = function() {
+        fbSignIn();
+        document.getElementById("menu-signin").innerHTML = user.displayName;
+        document.getElementById('login-popup').style.display = 'none';
+      };
+      document.getElementById('fb-sign-out').onclick = function() {
+        fbSignOut();
+        document.getElementById('login-popup').style.display = 'none';
+      };
+
+      function fbSignIn() {
+        firebase.auth().signInWithPopup(provider).then(function(result) {
+          token = result.credential.accessToken;
+          user = result.user;
+          db.collection("users").where("uid", "==", user.uid).get().then(function(querySnapshot) {
+            querySnapshot.forEach(function(doc) {
+              userCreated = true;
+            });
+          }).then(function(){createNewUser()});
+        }).catch(function(error) {
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          var email = error.email;
+          var credential = error.credential;
+        });
+      }
+
+      function fbSignOut() {
+        firebase.auth().signOut().then(function() {
+          loggedInUser = null;
+        }).catch(function(error) {
+        });
+      }
+
+      function createNewUser() {
+        if(!userCreated) {
+          db.collection("users").doc(user.uid).set({
+            uid: user.uid,
+            email: user.email,
+            displayName: user.displayName,
+            photoURL: user.photoURL,
+            isAdmin: false
+          });
+        }
+      }
 
     </script>
   </body>

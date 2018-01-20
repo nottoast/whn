@@ -52,13 +52,13 @@
             if(first) {
               first = false;
               for (var key in dataToAdd) {
-                document.getElementById('output').innerHTML += key+"|^";
+                document.getElementById('output').innerHTML += key+"|";
               }
               document.getElementById('output').innerHTML += dataToAdd[key]+"<br/>";
             }
 
             for (var key in dataToAdd) {
-              document.getElementById('output').innerHTML += dataToAdd[key]+"|^";
+              document.getElementById('output').innerHTML += dataToAdd[key]+"|";
             }
             document.getElementById('output').innerHTML += dataToAdd[key]+"<br/>";
 

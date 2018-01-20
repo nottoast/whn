@@ -9,7 +9,13 @@
     <div id="whn-wrapper">
 
       <div id="whn-title" class="text">
-        <span class="title-text">What happens next?</span>
+        <span class="index-title-text title-text">What happens next?</span>
+        <div class="menu info-text">
+          <span id="menu-signin" onclick="document.getElementById('login-popup').style.display = 'inline-block'">Sign in</span>
+          <span id="menu-home"> / Home</span>
+          <span id="menu-leaderboard" style="display: none"> / Leaderboard</span>
+          <span id="menu-admin" style="display: none"> / Admin</span>
+        </div>
       </div>
 
       <div class="spacer-1"></div>
@@ -20,10 +26,12 @@
         </div>
         <div id="controls-wrapper" class="wrapper">
           <div id="controls">
+            <!--
             <div id="user-name" class="user-name-display"></div>
             <div id="fb-sign-in" class="fb-button" style="display: none">Sign in</div>
             <div id="fb-sign-out" class="fb-button" style="display: none">X</div>
             <br/><br/>
+            -->
             Overall leaderboard
             <div id="leaderboard"></div>
           </div>
@@ -76,7 +84,6 @@
 
     <script>
 
-      var provider = new firebase.auth.FacebookAuthProvider();
       var loggedInUser, token;
       var db = firebase.firestore();
       var viewCount = -1;
@@ -436,42 +443,6 @@
         var regex = new RegExp( regexS );
         var results = regex.exec( url );
         return results == null ? null : results[1];
-      }
-
-      function fbSignIn() {
-        firebase.auth().signInWithPopup(provider).then(function(result) {
-          token = result.credential.accessToken;
-          user = result.user;
-          db.collection("users").where("uid", "==", user.uid).get().then(function(querySnapshot) {
-            querySnapshot.forEach(function(doc) {
-              userCreated = true;
-            });
-          }).then(function(){createNewUser()});
-        }).catch(function(error) {
-          var errorCode = error.code;
-          var errorMessage = error.message;
-          var email = error.email;
-          var credential = error.credential;
-        });
-      }
-
-      function fbSignOut() {
-        firebase.auth().signOut().then(function() {
-          loggedInUser = null;
-        }).catch(function(error) {
-        });
-      }
-
-      function createNewUser() {
-        if(!userCreated) {
-          db.collection("users").doc(user.uid).set({
-            uid: user.uid,
-            email: user.email,
-            displayName: user.displayName,
-            photoURL: user.photoURL,
-            isAdmin: false
-          });
-        }
       }
 
       function incrementCounters() {

@@ -223,3 +223,47 @@ index.html
   text-align: left;
   font-size: 1em;
 }
+#index-title {
+  margin-top: 0.2em;
+}
+.index-title-text {
+  display: inline-block;
+}
+.menu {
+  display: inline-block;
+  float: right;
+}
+#login-popup {
+  width: 72%;
+  height: 505px;
+  background-color: #ed8b39;
+  display: inline-block;
+  position: absolute;
+  margin: auto;
+  margin-left: 14%;
+  z-index: 5;
+  border-style: solid;
+  border-color: white;
+  border-width: 5px;
+  margin-top: 1em;
+  box-shadow: 5px 5px 2px #888888;
+}
+#login-popup-close {
+  display: inline-block;
+  margin-right: 0.8em;
+  margin-top: 0.5em;
+  font-size: 1.3em;
+  font-weight: bold;
+  cursor: pointer;
+}
+#menu-signin {
+  cursor: pointer;
+}
+.fb-sign-in-info {
+  display: inline-block;
+  margin-left: 1.5em;
+  margin-top: 1.5em;
+}
+.cursor-pointer {
+  cursor: pointer;
+}
