@@ -12,7 +12,7 @@
         <span class="index-title-text title-text">What happens next?</span>
         <div class="menu info-text">
           <span id="menu-signin" onclick="document.getElementById('login-popup').style.display = 'inline-block'">Sign in</span>
-          <span id="menu-home"> / Home</span>
+          <span id="menu-home"> / <a href="index.html">Home</a></span>
           <span id="menu-leaderboard" style="display: none"> / Leaderboard</span>
           <span id="menu-admin" style="display: none"> / Admin</span>
         </div>
@@ -107,16 +107,16 @@
       firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
           loggedInUser = user;
-          document.getElementById("user-name").style.display = 'inline-block';
-          document.getElementById("user-name").innerHTML = user.displayName;
-          document.getElementById("fb-sign-in").style.display = 'none';
-          document.getElementById("fb-sign-out").style.display = 'inline-block';
+          //document.getElementById("user-name").style.display = 'inline-block';
+          //document.getElementById("user-name").innerHTML = user.displayName;
+          //document.getElementById("fb-sign-in").style.display = 'none';
+          //document.getElementById("fb-sign-out").style.display = 'inline-block';
           refreshLeaderboard();
           loadUserData();
         } else {
-          document.getElementById("fb-sign-out").style.display = 'none';
-          document.getElementById("user-name").innerHTML = '';
-          document.getElementById("fb-sign-in").style.display = 'inline-block';
+          //document.getElementById("fb-sign-out").style.display = 'none';
+          //document.getElementById("user-name").innerHTML = '';
+          //document.getElementById("fb-sign-in").style.display = 'inline-block';
           loadQuizData();
         }
       });

@@ -1,0 +1,87 @@
+
+/* layout.html */
+body {
+  font-family: 'Walter Turncoat', cursive;
+  background-color: #ed8b39;
+  background-repeat: repeat;
+  background-position: center;
+  background-attachment: fixed;
+  color: white;
+}
+#whn-wrapper {
+  display: block;
+  width: 96%;
+  padding-top: 0.3em;
+  margin: auto;
+}
+#whn-container {
+  display: block;
+  width: 100%;
+  background-color: grey;
+  margin-top: 1em;
+}
+.layout-menu {
+  display: inline-block;
+  float: right;
+  padding-top: 0.4em;
+  text-align: left;
+  font-size: 1em;
+}
+.layout-title-text {
+  display: inline-block;
+  text-align: left;
+  font-size: 1.5em;
+}
+.cursor-pointer {
+  cursor: pointer;
+}
+
+/* sign in popup */
+#login-popup {
+  width: 99%;
+  height: 300px;
+  background-color: #ed8b39;
+  display: inline-block;
+  /*position: absolute;*/
+  margin: auto;
+  z-index: 5;
+  border-style: solid;
+  border-color: white;
+  border-width: 5px;
+  box-shadow: 5px 5px 2px #888888;
+}
+#login-popup-close {
+  display: inline-block;
+  margin-right: 0.8em;
+  margin-top: 0.5em;
+  font-size: 1.3em;
+  font-weight: bold;
+  cursor: pointer;
+  float: right;
+}
+.login-popup-text {
+  text-align: left;
+  font-size: 1em;
+}
+.fb-sign-in-info {
+  display: inline-block;
+  margin-left: 1.5em;
+  margin-top: 1.5em;
+}
+
+/* media rules */
+@media screen and (min-width: 800px) {
+  #whn-wrapper {
+    width: 90%;
+  }
+}
+@media screen and (min-width: 1000px) {
+  #whn-wrapper {
+    width: 85%;
+  }
+}
+@media screen and (min-width: 1200px) {
+  #whn-wrapper {
+    width: 75%;
+  }
+}

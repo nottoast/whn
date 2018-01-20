@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <link href="https://fonts.googleapis.com/css?family=Walter+Turncoat" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/layout.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  </head>
+
+  <body>
+
+    <div id="whn-wrapper">
+
+      <div id="layout-title">
+        <div class="layout-title-text">What happens next?</div>
+        <div class="layout-menu">
+          <span id="menu-signin" class="cursor-pointer" style="display: none" onclick="toggleSignInPopup()">Sign in</span>
+          <span id="menu-leaderboard" class="cursor-pointer"> / Select quiz</span>
+          <span id="menu-leaderboard" class="cursor-pointer"> / Leaderboard</span>
+          <span id="menu-admin" style="display: inline-block" class="cursor-pointer"> / Admin</span>
+        </div>
+      </div>
+
+      <div id="whn-container">
+
+        <div id="login-popup" style="display: none">
+          <div id="login-popup-close">
+            <span onclick="toggleSignInPopup()">X</span>
+          </div>
+          <div id="fb-sign-in-info" class="fb-sign-in-info">Please click on the following button to sign in using Facebook</div>
+          <div id="fb-sign-out-info" class="fb-sign-in-info" style="display: none">Please click on the following button to sign out</div>
+          <br/>
+          <div id="fb-sign-in" class="fb-sign-in-info cursor-pointer">Sign in</div>
+          <div id="fb-sign-out" class="fb-sign-in-info cursor-pointer" style="display: none">Sign out</div>
+        </div>
+
+        <div id="layout-container">
+          test
+        </div>
+
+      </div>
+
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-firestore.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/layout.js"></script>
+
+  </body>
+
+</html>
